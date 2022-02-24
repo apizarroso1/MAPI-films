@@ -2,6 +2,8 @@ package com.example.mapifilms
 
 import android.content.Context
 
+// prueba de funcionamiento
+
 class Prefs(val context:Context) {
     val SHARED_NAME="myshared"
     val SHARED_USER_NAME="nickname"
