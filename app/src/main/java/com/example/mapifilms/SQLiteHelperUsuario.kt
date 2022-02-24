@@ -6,7 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.practicarecufirebasesqlite.Pelicula
+
 
 class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION) {
 
@@ -27,6 +27,10 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         private const val COLUMN_SRC = "src"
         private const val COLUMN_GENERO = "GENERO"
 
+        private const val TABLE_VISTA="vista"
+        private const val COLUMN_IDPELICULA="idPelicula"
+        private const val COLUMN_NICKNAMEUSUARIO="nicknameUsuario"
+
     }
 
 
@@ -35,6 +39,10 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
                 "("+ ID + " TEXT PRIMARY KEY, "+ PASS + " TEXT , $EDAD INTEGER")
         val crearTablaPelicula =
             ("CREATE TABLE $TABLE_NAME ($IDPELICULA INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TITULO TEXT, $COLUMN_TITULO_ORIGINAL TEXT, $COLUMN_DIRECTOR TEXT, $COLUMN_DURACION INTEGER,$COLUMN_SRC TEXT,$COLUMN_GENERO TEXT")
+
+        val crearTablaVista=("CREATE TABLE  $TABLE_VISTA (id INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_IDPELICULA INTEGER,$COLUMN_NICKNAMEUSUARIO TEXT," +
+                "FOREIGN KEY($COLUMN_IDPELICULA) REFERENCES $TABLE_NAME($IDPELICULA)," +
+                "FOREIGN KEY($COLUMN_NICKNAMEUSUARIO) REFERENCES $TABLAUSU($ID))")
 
         db?.execSQL(crearTablaPelicula)
         db?.execSQL(crearTablaUsuario)
@@ -61,7 +69,45 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         return success
 
     }
+    @SuppressLint("Range")
+    fun getPelicula(id:Int): Pelicula? {
 
+        var peli:Pelicula
+
+        val select ="SELECT * FROM $TABLE_NAME WHERE $IDPELICULA= $id "
+        val db= this.readableDatabase
+
+        val cursor : Cursor?
+
+
+        try {
+            cursor= db.rawQuery(select,null)
+        }catch (e: Exception){
+            e.printStackTrace()
+            db.execSQL(select)
+            return null
+        }
+        if(cursor.moveToFirst()){
+            var id: Int
+            var titulo: String
+            var tituloOriginal: String
+            var director: String
+            var duracion: Int
+            var src:String
+            var genero:String
+
+            id = cursor.getInt(cursor.getColumnIndex(IDPELICULA))
+            titulo = cursor.getString(cursor.getColumnIndex(COLUMN_TITULO))
+            tituloOriginal = cursor.getString(cursor.getColumnIndex(COLUMN_TITULO_ORIGINAL))
+            director = cursor.getString(cursor.getColumnIndex(COLUMN_DIRECTOR))
+            duracion = cursor.getInt(cursor.getColumnIndex(COLUMN_DURACION))
+            src=cursor.getString(cursor.getColumnIndex(COLUMN_SRC))
+            genero=cursor.getString(cursor.getColumnIndex(COLUMN_GENERO))
+             peli = Pelicula(id, titulo, tituloOriginal, director, duracion, Genero.parse(genero),src)
+
+        }
+        return peli
+    }
     fun getUsuario(nickname:String,pass:String):Boolean{
         var encontrado:Boolean = false;
 
@@ -117,7 +163,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
                 fUsuario.add(usuario)
             }while (cursor.moveToNext())
         }
-
+        db.close()
         return fUsuario
 
     }
@@ -150,7 +196,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         val db = this.writableDatabase
         val contentValue = ContentValues()
 
-        contentValue.put(IDPELICULA, p.id)
+
         contentValue.put(COLUMN_TITULO, p.titulo)
         contentValue.put(COLUMN_TITULO_ORIGINAL, p.tituloOriginal)
         contentValue.put(COLUMN_DIRECTOR, p.director)
@@ -163,6 +209,21 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
 
         return exito
     }
+    fun insertVista(v: Vista): Long {
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+
+
+        contentValue.put(COLUMN_IDPELICULA, v.pelicula.id)
+        contentValue.put(COLUMN_NICKNAMEUSUARIO, v.usuario.nickname)
+
+        val exito = db.insert(TABLE_VISTA, null, contentValue)
+        db.close()
+
+        return exito
+    }
+
+
 
     @SuppressLint("Range")
     fun returnAllPelicula(): ArrayList<Pelicula> {
@@ -206,5 +267,39 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
 
         return lista
     }
+    @SuppressLint("Range")
+    fun returnAllVista(): ArrayList<Vista> {
+        val lista: ArrayList<Vista> = ArrayList()
+        val statement = "SELECT * FROM $TABLE_VISTA"
+        val db = this.readableDatabase
 
+        val cursor: Cursor?
+
+        try {
+            cursor = db.rawQuery(statement, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            db.execSQL(statement)
+            return ArrayList()
+        }
+
+        var id: Int
+
+        var peli:Int
+        var usu:String
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex("id"))
+                peli=cursor.getInt(cursor.getColumnIndex(COLUMN_IDPELICULA))
+                usu =cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAMEUSUARIO))
+               // val p = Vista(id,peli,usu) ahi que mirarlo si guardar en vista el id o el objeto
+               // lista.add(p)
+            } while (cursor.moveToNext())
+        }
+
+        db.close()
+
+        return lista
+    }
 }

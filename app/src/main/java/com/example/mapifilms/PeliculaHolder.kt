@@ -1,11 +1,11 @@
-package com.example.practicarecufirebasesqlite
+package com.example.mapifilms
 
-import android.media.Image
+
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mapifilms.R
+
 import com.squareup.picasso.Picasso
 
 class PeliculaHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -17,12 +17,16 @@ class PeliculaHolder(val view: View) : RecyclerView.ViewHolder(view) {
     private val genero: TextView = view.findViewById(R.id.generos)
 
 
-    fun render(p: Pelicula) {
+    fun render(p: Pelicula, usu:String) {
         Picasso.with(view.context).load(p.src).into(imagen);
         titulo.text = p.titulo
         tituloOriginal.text = p.tituloOriginal
         director.text = p.director
         duracion.text = p.duracion.toString()
         genero.text=p.genero.toString()
+        view.setOnClickListener{
+            UserClass.prefs.getNickname()
+        }
+
     }
 }

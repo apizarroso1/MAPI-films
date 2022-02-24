@@ -13,4 +13,12 @@
         android:icon="@drawable/eye"
         app:showAsAction="ifRoom"
         />
+
+
+
+    <item android:title="Cerrar sesion"
+        android:id="@+id/cerrar"
+        android:icon="@drawable/tuerca"
+        app:showAsAction="collapseActionView"
+        />
 </menu>

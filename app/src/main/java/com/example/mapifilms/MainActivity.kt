@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 if(mysql.getUsuario(usu,pass)){
                     var i = Intent(this, Entrando::class.java)
                     i.putExtra("usuario",usu)
-
+                    UserClass.prefs.saveName(usu)
                     startActivity(i)
 
                     finish()
