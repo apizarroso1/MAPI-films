@@ -25,7 +25,8 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         private const val COLUMN_DIRECTOR = "director"
         private const val COLUMN_DURACION = "duracion"
         private const val COLUMN_SRC = "src"
-        private const val COLUMN_GENERO = "GENERO"
+        private const val COLUMN_GENERO = "genero"
+        private const val COLUMN_TRAILER="trailer"
 
         private const val TABLE_VISTA="vista"
         private const val COLUMN_IDPELICULA="idPelicula"
@@ -38,7 +39,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         val crearTablaUsuario= ("CREATE TABLE "+ TABLAUSU+
                 "("+ ID + " TEXT PRIMARY KEY, "+ PASS + " TEXT , $EDAD INTEGER")
         val crearTablaPelicula =
-            ("CREATE TABLE $TABLE_NAME ($IDPELICULA INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TITULO TEXT, $COLUMN_TITULO_ORIGINAL TEXT, $COLUMN_DIRECTOR TEXT, $COLUMN_DURACION INTEGER,$COLUMN_SRC TEXT,$COLUMN_GENERO TEXT")
+            ("CREATE TABLE $TABLE_NAME ($IDPELICULA INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TITULO TEXT, $COLUMN_TITULO_ORIGINAL TEXT, $COLUMN_DIRECTOR TEXT, $COLUMN_DURACION INTEGER,$COLUMN_SRC TEXT,$COLUMN_GENERO TEXT,$COLUMN_TRAILER TEXT")
 
         val crearTablaVista=("CREATE TABLE  $TABLE_VISTA (id INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_IDPELICULA INTEGER,$COLUMN_NICKNAMEUSUARIO TEXT," +
                 "FOREIGN KEY($COLUMN_IDPELICULA) REFERENCES $TABLE_NAME($IDPELICULA)," +
@@ -46,6 +47,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
 
         db?.execSQL(crearTablaPelicula)
         db?.execSQL(crearTablaUsuario)
+        db?.execSQL(crearTablaVista)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -203,7 +205,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         contentValue.put(COLUMN_DURACION, p.duracion)
         contentValue.put(COLUMN_SRC, p.src)
         contentValue.put(COLUMN_GENERO, p.genero.toString())
-
+        contentValue.put(COLUMN_TRAILER,p.trailer)
         val exito = db.insert(TABLE_NAME, null, contentValue)
         db.close()
 
@@ -248,6 +250,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         var duracion: Int
         var src:String
         var genero:String
+        var trailer:String
 
         if (cursor.moveToFirst()) {
             do {
@@ -258,7 +261,8 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
                 duracion = cursor.getInt(cursor.getColumnIndex(COLUMN_DURACION))
                 src=cursor.getString(cursor.getColumnIndex(COLUMN_SRC))
                 genero=cursor.getString(cursor.getColumnIndex(COLUMN_GENERO))
-                val p = Pelicula(id, titulo, tituloOriginal, director, duracion, Genero.parse(genero),src)
+                trailer=cursor.getString(cursor.getColumnIndex(COLUMN_TRAILER))
+                val p = Pelicula(id, titulo, tituloOriginal, director, duracion, Genero.parse(genero),src,trailer)
                 lista.add(p)
             } while (cursor.moveToNext())
         }

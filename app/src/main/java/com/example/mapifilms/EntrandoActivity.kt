@@ -1,14 +1,16 @@
 package com.example.mapifilms
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class Entrando : AppCompatActivity() {
+class EntrandoActivity : AppCompatActivity() {
     private lateinit var usu:String
 
     lateinit var pelis:ArrayList<Pelicula>
@@ -23,7 +25,7 @@ class Entrando : AppCompatActivity() {
         usu= intent.getStringExtra("usuario").toString()
         toolbar=findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
+        val decoracion=DividerItemDecoration(this,LinearLayoutManager(this).orientation)
         con= SQLiteHelperUsuario(this)
         pelis = ArrayList()
 
@@ -32,10 +34,18 @@ class Entrando : AppCompatActivity() {
         recy.layoutManager= LinearLayoutManager(this)
         pelis =con.returnAllPelicula()
 
-        adapter= PeliculaAdapter(pelis,usu)
+        adapter= PeliculaAdapter(pelis,{onItemSelected(it)})
         recy.adapter=adapter
 
+        recy.addItemDecoration(decoracion)
 
+    }
+
+    fun onItemSelected(pelicula: Pelicula){
+        var i= Intent(this,TrailerActivity::class.java)
+        i.putExtra("trailer",pelicula.trailer)
+        startActivity(i)
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,6 +60,11 @@ class Entrando : AppCompatActivity() {
             R.id.mispeliculas->{
 
 
+                return true
+            }
+            R.id.cerrar->{
+                UserClass.prefs.wipe()
+                startActivity(Intent(this, MainActivity::class.java))
                 return true
             }
 

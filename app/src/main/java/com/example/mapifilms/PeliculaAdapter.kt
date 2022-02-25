@@ -1,11 +1,12 @@
 package com.example.mapifilms
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 
-class PeliculaAdapter(val items: ArrayList<Pelicula>,val usu:String) : RecyclerView.Adapter<PeliculaHolder>() {
+class PeliculaAdapter(val items: ArrayList<Pelicula>,private val onClickListener: (Pelicula)->Unit) : RecyclerView.Adapter<PeliculaHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeliculaHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -13,7 +14,7 @@ class PeliculaAdapter(val items: ArrayList<Pelicula>,val usu:String) : RecyclerV
     }
 
     override fun onBindViewHolder(holder: PeliculaHolder, position: Int) {
-        holder.render(items[position],usu)
+        holder.render(items[position],onClickListener)
 
     }
 

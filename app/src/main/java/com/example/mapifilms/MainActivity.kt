@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this,"Rellena los campos",Toast.LENGTH_LONG).show()
             }else{
                 if(mysql.getUsuario(usu,pass)){
-                    var i = Intent(this, Entrando::class.java)
+                    var i = Intent(this, EntrandoActivity::class.java)
                     i.putExtra("usuario",usu)
                     UserClass.prefs.saveName(usu)
                     startActivity(i)
