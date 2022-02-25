@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper
 class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION) {
 
     companion object  {
-
+        //hitler
         private  const val DATABASE_VERSION =1
         private  const val DATABASE_NAME ="mapifilm.db"
         private  const val ID ="nickname"
