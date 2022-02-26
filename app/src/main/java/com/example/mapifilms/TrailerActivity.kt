@@ -1,10 +1,14 @@
 package com.example.mapifilms
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
 import android.widget.VideoView
+import androidx.appcompat.widget.Toolbar
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -27,6 +31,7 @@ class TrailerActivity : YouTubeBaseActivity(){
         btnPlay= findViewById(R.id.btnPlay)
 
 
+
         videoId=recogerUrl()
 
 
@@ -36,7 +41,7 @@ class TrailerActivity : YouTubeBaseActivity(){
                 p1: YouTubePlayer?,
                 p2: Boolean
             ) {
-               p1?.loadVideo(videoId)
+                p1?.loadVideo(videoId)
             }
 
             override fun onInitializationFailure(

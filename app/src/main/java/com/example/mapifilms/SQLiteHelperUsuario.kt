@@ -71,6 +71,7 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
         return success
 
     }
+    /*
     @SuppressLint("Range")
     fun getPelicula(id:Int): Pelicula? {
 
@@ -105,11 +106,13 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
             duracion = cursor.getInt(cursor.getColumnIndex(COLUMN_DURACION))
             src=cursor.getString(cursor.getColumnIndex(COLUMN_SRC))
             genero=cursor.getString(cursor.getColumnIndex(COLUMN_GENERO))
-             peli = Pelicula(id, titulo, tituloOriginal, director, duracion, Genero.parse(genero),src)
+            peli = Pelicula(id, titulo, tituloOriginal, director, duracion, Genero.parse(genero),src)
 
         }
         return peli
     }
+    */
+
     fun getUsuario(nickname:String,pass:String):Boolean{
         var encontrado:Boolean = false;
 
@@ -297,8 +300,8 @@ class SQLiteHelperUsuario(context: Context): SQLiteOpenHelper(context,DATABASE_N
                 id = cursor.getInt(cursor.getColumnIndex("id"))
                 peli=cursor.getInt(cursor.getColumnIndex(COLUMN_IDPELICULA))
                 usu =cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAMEUSUARIO))
-               // val p = Vista(id,peli,usu) ahi que mirarlo si guardar en vista el id o el objeto
-               // lista.add(p)
+                // val p = Vista(id,peli,usu) ahi que mirarlo si guardar en vista el id o el objeto
+                // lista.add(p)
             } while (cursor.moveToNext())
         }
 
