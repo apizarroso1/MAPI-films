@@ -7,14 +7,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 
-//saludos
-
 lateinit var edNickname:EditText
 lateinit var edPass:EditText
 lateinit var btn:Button
 lateinit var mysql:SQLiteHelperUsuario
-
-lateinit var nuevaVariable:String
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
